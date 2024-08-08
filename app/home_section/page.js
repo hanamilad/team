@@ -45,6 +45,15 @@ const Section = () => {
                 </span>
                 <h2 className="mt-2 font-bold">الاسماء</h2>
               </Link>
+              <Link
+                className="block text-center rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                href="/all_teams"
+              >
+                <span className="inline-block rounded-lg bg-gray-50 p-3">
+                  <i className="fa-solid fa-users"></i>
+                </span>
+                <h2 className="mt-2 font-bold">الرهوط</h2>
+              </Link>
               <a
                 className="block bg-red-950 text-white text-center rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
                 href=""

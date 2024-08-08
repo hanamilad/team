@@ -1,9 +1,12 @@
 "use client"
-import React, { useState } from 'react';
-import { ref as databaseRef, push, set } from 'firebase/database';
+import React, { useEffect, useState } from 'react';
+import { ref as databaseRef, push, set ,onValue, ref} from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { database, storage } from '../firebase/Firebasepage'; // تأكد من استيراد storage بشكل صحيح
 import Breadcrumb from '../Breadcrumb/page';
+import Loading from '../loading';
+import Swal from 'sweetalert2';
+
 
 const AddPerson = () => {
   const [name, setName] = useState('');
@@ -17,12 +20,28 @@ const AddPerson = () => {
   const [groub, setIgroub] = useState('');
   const [groub_type, setgroub_type] = useState('');
   const [team_name, setteam_name] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [Teams, setTeams] = useState([]);
+
+  useEffect(() => {
+      const teamRef = ref(database, 'team');
+      onValue(teamRef, (snapshot) => {
+          const data = snapshot.val();
+          const teamList = [];
+          for (let id in data) {
+              teamList.push({ id, ...data[id] });
+          }
+          setTeams(teamList);
+      });
+  }, []);
+
+  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 100 * 1024) {
-        setImageError('حجم الصورة يجب أن لا يتجاو  50 كيلو بايت');
+      if (file.size > 1 * 1024 * 1024) {
+        setImageError('حجم الصورة يجب أن لا يتجاو  1 ميجا بايت');
         setImageFile(null);
       } else {
         setImageError('');
@@ -32,7 +51,9 @@ const AddPerson = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log(groub_type)
     e.preventDefault();
+    setLoading(true);
     try {
       let imageUrl = '';
 
@@ -57,8 +78,13 @@ const AddPerson = () => {
         team_name: team_name
 
       });
+      setLoading(false);
+      Swal.fire({
+        text: 'تم حفظ البيانات بنجاح',
+        icon: 'success',
+        confirmButtonText: 'حسنًا'
+      });
 
-      alert('تم حفظ البيانات بنجاح');
       setName('');
       setPhone('');
       setDate('');
@@ -70,150 +96,193 @@ const AddPerson = () => {
       setgroub_type('');
       setteam_name('');
     } catch (error) {
-      console.error('Error saving data: ', error);
+      setLoading(false);
+      Swal.fire({
+        text: 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.',
+        icon: 'error',
+        confirmButtonText: 'حسنًا'
+      });
     }
   };
 
   return (
-    <div>
-      <section className="bg-gray-100">
-        <Breadcrumb name="اضافة" />
-        <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
-            <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <input
-                    className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                    placeholder="الاسم رباعى"
-                    type="text"
-                    id="name"
-                    value={name}
-                    required
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <>
+      {loading && <Loading />}
+      <div>
+        <section className="bg-gray-100">
+          <Breadcrumb name="اضافة" />
+          <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
+              <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
+                    <label htmlFor='name'>الاسم رباعى</label>
                     <input
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      placeholder="العنوان"
+                      className="w-full rounded-lg border-gray-200 p-3 text-sm border "
                       type="text"
-                      id="address"
-                      value={address}
+                      id="name"
+                      value={name}
                       required
-                      onChange={(e) => setAddress(e.target.value)}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
-                  <div>
-                    <input
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      placeholder="تاريخ الميلاد"
-                      type="date"
-                      id="date"
-                      value={date}
-                      required
-                      onChange={(e) => setDate(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <select
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      id="groub"
-                      value={groub}
-                      required
-                      onChange={(e) => setIgroub(e.target.value)}
-                    >
-                      <option value="0">الفريق</option>
-                      <option value="1">زهرات</option>
-                      <option value="2">مرشدات</option>
-                      <option value="3">عشيرة</option>
-                    </select>
-                  </div>
-                  {groub == 1 || groub == 2 ?
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <select
-                        className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                        id="groub_type"
-                        value={groub_type}
+                      <label htmlFor='address'>العنوان</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="address"
+                        value={address}
                         required
-                        onChange={(e) => setgroub_type(e.target.value)}
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='date'>تاريخ الميلاد</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="date"
+                        id="date"
+                        value={date}
+                        required
+                        onChange={(e) => setDate(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='groub'>اختر الفريق</label>
+                      <select
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        id="groub"
+                        value={groub}
+                        required
+                        onChange={(e) => setIgroub(e.target.value)}
                       >
-                        <option value="1">ا</option>
-                        <option value="2">ب</option>
-                        <option value="3">ج</option>
+                        <option value="0">الفريق</option>
+                        <option value="1">زهرات</option>
+                        <option value="2">مرشدات</option>
+                        <option value="3">عشيرة</option>
                       </select>
-                    </div> : (groub == 3 ? 
+                    </div>
+                    {groub == 1 || groub == 2 ?
                       <div>
-                    <input
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      placeholder="اسم الرهط"
-                      type="text"
-                      id="team_name"
-                      value={team_name}
-                      required
-                      onChange={(e) => setteam_name(e.target.value)}
-                    />
+                        <label htmlFor='groub_type'>رقم الفريق</label>
+                        <select
+                          className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                          id="groub_type"
+                          value={groub_type}
+                          required
+                          onChange={(e) => setgroub_type(e.target.value)}
+                        >
+                          <option value="1">ا</option>
+                          <option value="2">ب</option>
+                          <option value="3">ج</option>
+                        </select>
+                      </div> : (groub == 3 ?
+                        <div>
+                          <label htmlFor='team_name'>اسم الرهط</label>
+
+                          <select
+                          className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                          id="team_name"
+                          value={team_name}
+                          required
+                          onChange={(e) => setteam_name(e.target.value)}
+                        >
+                          <option value="0">اختر الرهط</option>
+                          { Teams.map((ele)=>{
+                            return(
+                              <>
+                              <option value={ele.id}>{ele.name}</option>
+                              </>
+                            )
+                          })
+                          }
+                        </select>
+                        </div>
+                        :
+                        <></>)}
+                    <div>
+                      <label htmlFor='father'>اب الاعتراف</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="father"
+                        value={fatherConfession}
+                        required
+                        onChange={(e) => setFatherConfession(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='phone'>رقم التليفون</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="tel"
+                        id="phone"
+                        value={phone}
+                        required
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='academic_year'>السنة الدراسية</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="academic_year"
+                        value={academicYear}
+                        required
+                        onChange={(e) => setAcademicYear(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <label
+                        htmlFor="picture"
+                        className="flex flex-col items-center justify-center w-full max-w-sm p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
+                      >
+                        <svg
+                          className="w-12 h-12 text-gray-400 mb-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M3 7h18M4 7l1 10h14l1-10H4z"
+                          />
+                        </svg>
+                        <span className="text-gray-600 text-sm font-medium">اختر صورة</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          id="picture"
+                          required
+                          onChange={handleImageChange}
+                          className="sr-only"
+                        />
+                      </label>
+                      {imageError && <p className="text-red-500">{imageError}</p>}
+                    </div>
+
                   </div>
-                    :
-                     <></>)}
-                  <div>
-                    <input
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      placeholder="اب الاعتراف"
-                      type="text"
-                      id="father"
-                      value={fatherConfession}
-                      required
-                      onChange={(e) => setFatherConfession(e.target.value)}
-                    />
+                  <div className="mt-4">
+                    <button
+                      type="submit"
+                      className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+                    >
+                      حفظ
+                    </button>
                   </div>
-                  <div>
-                    <input
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      placeholder="رقم التليفون"
-                      type="tel"
-                      id="phone"
-                      value={phone}
-                      required
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <input
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                      placeholder="السنة الدراسية"
-                      type="text"
-                      id="academic_year"
-                      value={academicYear}
-                      required
-                      onChange={(e) => setAcademicYear(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                    />
-                    {imageError && <p className="text-red-500">{imageError}</p>}
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <button
-                    type="submit"
-                    className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
-                  >
-                    حفظ
-                  </button>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 };
 

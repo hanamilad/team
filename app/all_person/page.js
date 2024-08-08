@@ -9,8 +9,8 @@ const AllPerson = () => {
 
 
 
-  const handleView = (team) => {
-    router.push(`/all_person/${team}`);
+  const handleView = (Grop_type) => {
+    router.push(`/all_person/${Grop_type}`);
   };
 
   return (

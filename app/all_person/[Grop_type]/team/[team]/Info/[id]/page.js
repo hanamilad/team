@@ -4,26 +4,32 @@
 import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { useRouter } from 'next/navigation'; // للحصول على معلمات URL
-import { database } from '../../../../firebase/Firebasepage'; // تأكد من المسار الصحيح
+import { database } from '../../../../../../firebase/Firebasepage'; // تأكد من المسار الصحيح
 import Breadcrumb from '@/app/Breadcrumb/page';
 import Image from 'next/image';
+import Loading from '../../../../../../loading';
 
 const PersonelInfo = ({ params }) => {
   const { id } = params; 
   const router = useRouter();
   const [person, setPerson] = useState(null);
+  const [teams_name,setteams_name]=useState([])
 
   useEffect(() => {
     if (id) {
       const personRef = ref(database, `person/${id}`);
+      const teamsRef = ref(database,"team")
       onValue(personRef, (snapshot) => {
         const data = snapshot.val();
         setPerson(data);
       });
+      onValue(teamsRef, (snapshot) => {
+        const data = snapshot.val();
+        setteams_name(data)});
     }
   }, [id]);
 
-  if (!person) return <div>تحميل...</div>;
+  if (!person) return <div><Loading /></div>;
   var groubname;
   if(person.groub == 1 ){
     groubname = "زهرات";
@@ -44,6 +50,9 @@ const PersonelInfo = ({ params }) => {
   if(person.groub_type == 3){
     groub_type = "ج";
   }
+  var team_name=teams_name.filter((ele)=>{ return ele.id == person.team_name })
+  console.log(team_name);
+
 
   return (
     <div>
@@ -61,7 +70,7 @@ const PersonelInfo = ({ params }) => {
           <p><strong>رقم الهاتف:</strong> {person.phone}</p>
           <p className='text-end'><strong>العنوان:</strong> {person.address}</p>
           <p><strong>السنة الدراسية:</strong> {person.academic_year}</p>
-          <p><strong>فريق:</strong> {groubname} {groub_type ? groub_type : (person.team_name ? person.team_name : "")} </p>
+          <p><strong>فريق:</strong> {groubname} ({groub_type ? groub_type : (team_name[0].name ? team_name[0].name : "")}) </p>
           <p><strong>اعتراف الأب:</strong> {person.Father_confession}</p>
           <p><strong>التاريخ:</strong> {person.date}</p>
         </div>

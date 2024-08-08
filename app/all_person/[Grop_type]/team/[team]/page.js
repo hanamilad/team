@@ -1,13 +1,14 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
-import { database } from '../../firebase/Firebasepage';
-import Breadcrumb from '../../Breadcrumb/page';
+import { database } from '../../../../firebase/Firebasepage';
+import Breadcrumb from '../../../../Breadcrumb/page';
 import { useRouter } from 'next/navigation';
 
 
 const Person = ({ params }) => {
     const { team } = params; 
+    const { Grop_type } = params; 
     const [persons, setPersons] = useState([]);
   const router = useRouter();
 
@@ -22,13 +23,15 @@ const Person = ({ params }) => {
       setPersons(personsList);
     });
   }, [team]);
-  const filteredPersons = persons.filter((per) => per.groub == team);
+  const filteredPersons = persons.filter((per) => per.groub == Grop_type && per.groub_type == team || per.team_name == team);
   var name;
-  team == 1 ? name="زهرات" :(team == 2 ? name="مرشدات" : name="عشيرة" );
-
+  var type;
+  team == 1 ? type = "ا" : (team == 2 ? type = "ب" : (team == 3 ? type = "ج" : type = ""));
+  Grop_type == 1 ? name=`زهرات ${type}` :(Grop_type == 2 ? name=`مرشدات ${type}` : name="عشيرة" );
+  
 
   const handleViewClick = (id) => {
-    router.push(`/all_person/${team}/Info/${id}`);
+    router.push(`/all_person/${Grop_type}/team/${team}/Info/${id}`);
   };
   return (
     <div>

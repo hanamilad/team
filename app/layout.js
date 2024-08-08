@@ -1,11 +1,12 @@
 "use client";
 import { Inter } from "next/font/google";
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { auth } from './firebase/Firebasepage'; // تأكد من استيراد ملف Firebase بشكل صحيح
 import { onAuthStateChanged } from 'firebase/auth';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import "./globals.css";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +30,11 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+      <Suspense fallback={<Loading />}>
+                    {children}
+      </Suspense>
+</body>
     </html>
   );
 }

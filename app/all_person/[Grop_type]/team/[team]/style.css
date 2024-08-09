@@ -1,0 +1,51 @@
+
+  /* From Uiverse.io by vinodjangid07 */ 
+  .Btn ,.Btn1 ,.Btn2 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 40px;
+    border: none;
+    padding: 0px 20px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 10px;
+    transition-duration: .3s;
+  }
+  .Btn{
+    background-color: rgb(28, 123, 4);
+    box-shadow: 5px 5px 0px rgb(28, 123, 4);
+  }
+  .Btn1{
+    background-color: rgb(168, 38, 255);
+    box-shadow: 5px 5px 0px rgb(140, 32, 212);
+}
+  .Btn2{
+    background-color: rgb(243, 2, 2);
+    box-shadow: 5px 5px 0px rgb(255, 0, 0);
+}
+  .Btn:active{
+    box-shadow: 5px 5px 0px rgb(15, 75, 0);
+    transform: translate(3px , 3px);
+    transition-duration: .3s;
+  }
+  .Btn1:active{
+    box-shadow: 2px 2px 0px rgb(140, 32, 212);
+    transform: translate(3px , 3px);
+    transition-duration: .3s;
+
+}
+  .Btn2:active{
+    box-shadow: 2px 2px 0px rgb(165, 5, 18);
+    transform: translate(3px , 3px);
+    transition-duration: .3s;
+  }
+  
+  
+  
+  .Btn:hover ,.Btn1:hover , .Btn2:hover {
+    color: transparent;
+  }
+  

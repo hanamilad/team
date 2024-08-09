@@ -56,3 +56,71 @@
   .button:active {
     border: 1px solid #2e8644;
   }
+
+
+
+
+  /* From Uiverse.io by vinodjangid07 */ 
+.Btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+  border: none;
+  padding: 0px 20px;
+  background-color: rgb(168, 38, 255);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px rgb(140, 32, 212);
+  transition-duration: .3s;
+}
+
+
+
+.Btn:hover {
+  color: transparent;
+}
+
+
+
+.Btn:active {
+  transform: translate(3px , 3px);
+  transition-duration: .3s;
+  box-shadow: 2px 2px 0px rgb(140, 32, 212);
+}
+
+
+/* From Uiverse.io by vinodjangid07 */ 
+.BtnR {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+  border: none;
+  padding: 0px 20px;
+  background-color: rgb(243, 2, 2);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px rgb(255, 0, 0);
+  transition-duration: .3s;
+}
+
+
+
+.BtnR:hover {
+  color: transparent;
+}
+
+
+
+.BtnR:active {
+  transform: translate(3px , 3px);
+  transition-duration: .3s;
+  box-shadow: 2px 2px 0px rgb(165, 5, 18);
+}

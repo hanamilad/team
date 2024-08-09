@@ -50,8 +50,10 @@ const PersonelInfo = ({ params }) => {
   if(person.groub_type == 3){
     groub_type = "ج";
   }
-  var team_name=teams_name.filter((ele)=>{ return ele.id == person.team_name })
-  console.log(team_name);
+  var team_name ;
+if (teams_name && teams_name.length > 0) {
+  team_name = teams_name.filter((ele) => ele.id == person.team_name);
+}
 
 
   return (
@@ -62,7 +64,7 @@ const PersonelInfo = ({ params }) => {
           {person.image ? (
             <Image src={person.image} width={150} height={150} alt={`${person.name}'s image`} />
           ) : (
-            <div className='w-[150px] h-[150px] bg-gray-500 rounded-full text-center'><i class="fa-solid fa-user text-[100px]"></i></div>
+            <div className='w-[150px] h-[150px] bg-gray-500 rounded-full text-center'><i className="fa-solid fa-user text-[100px]"></i></div>
           )}
         </div>
         <div className='m-3 flex flex-col gap-4 items-end'>

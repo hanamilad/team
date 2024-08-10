@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { ref as databaseRef, push, set ,onValue, ref} from 'firebase/database';
+import { ref as databaseRef, push, set, onValue, ref } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { database, storage } from '../firebase/Firebasepage'; // تأكد من استيراد storage بشكل صحيح
 import Breadcrumb from '../Breadcrumb/page';
@@ -24,18 +24,16 @@ const AddPerson = () => {
   const [Teams, setTeams] = useState([]);
 
   useEffect(() => {
-      const teamRef = ref(database, 'team');
-      onValue(teamRef, (snapshot) => {
-          const data = snapshot.val();
-          const teamList = [];
-          for (let id in data) {
-              teamList.push({ id, ...data[id] });
-          }
-          setTeams(teamList);
-      });
+    const teamRef = ref(database, 'team');
+    onValue(teamRef, (snapshot) => {
+      const data = snapshot.val();
+      const teamList = [];
+      for (let id in data) {
+        teamList.push({ id, ...data[id] });
+      }
+      setTeams(teamList);
+    });
   }, []);
-
-  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -51,12 +49,10 @@ const AddPerson = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log(groub_type)
     e.preventDefault();
     setLoading(true);
     try {
       let imageUrl = '';
-
       if (imageFile) {
         const imageRef = storageRef(storage, `person/${imageFile.name}`);
         await uploadBytes(imageRef, imageFile);
@@ -76,7 +72,6 @@ const AddPerson = () => {
         groub: groub,
         groub_type: groub_type,
         team_name: team_name
-
       });
       setLoading(false);
       Swal.fire({
@@ -183,22 +178,23 @@ const AddPerson = () => {
                           <label htmlFor='team_name'>اسم الرهط</label>
 
                           <select
-                          className="w-full rounded-lg border-gray-200 p-3 text-sm border"
-                          id="team_name"
-                          value={team_name}
-                          required
-                          onChange={(e) => setteam_name(e.target.value)}
-                        >
-                          <option value="0">اختر الرهط</option>
-                          { Teams.map((ele)=>{
-                            return(
-                              <>
-                              <option value={ele.id}>{ele.name}</option>
-                              </>
-                            )
-                          })
-                          }
-                        </select>
+                            className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                            id="team_name"
+                            value={team_name}
+                            required
+                            onChange={(e) => setteam_name(e.target.value)}
+                          >
+                            <option value="0">اختر الرهط</option>
+                            {Teams.map((ele) => {
+                              return (
+                                <option key={ele.id} value={ele.id}>
+                                  {ele.name}
+                                </option>
+                              );
+
+                            })
+                            }
+                          </select>
                         </div>
                         :
                         <></>)}

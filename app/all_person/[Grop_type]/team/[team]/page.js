@@ -25,13 +25,15 @@ const Person = ({ params }) => {
       setPersons(personsList);
     });
   }, [team]);
-  const filteredPersons = persons.filter((per) => per.groub == Grop_type && per.groub_type == team || per.team_name == team);
+  const filteredPersons = persons.filter((per) => per.groub == Grop_type && (per.groub_type == team || per.team_name == team));
   var name;
   var type;
   team == 1 ? type = "ا" : (team == 2 ? type = "ب" : (team == 3 ? type = "ج" : type = ""));
   Grop_type == 1 ? name = `زهرات ${type}` : (Grop_type == 2 ? name = `مرشدات ${type}` : name = "عشيرة");
 
-
+console.log(filteredPersons)
+console.log(Grop_type,"Grop_type")
+console.log(team,"team")
   const handleViewClick = (id) => {
     router.push(`/all_person/${Grop_type}/team/${team}/Info/${id}`);
   };
@@ -80,7 +82,6 @@ const handleEditPerson = (person) => {
                       </button>
                       <button
                         className="Btn1"
-                        // onClick={() => handleEditPerson(person)}
                       >
                         تعديل
                       </button>

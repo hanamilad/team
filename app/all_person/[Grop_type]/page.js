@@ -1,15 +1,20 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Breadcrumb from '../../Breadcrumb/page';
 import { useRouter } from 'next/navigation';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../../firebase/Firebasepage';
+import { UserContext } from '../../context/page'; 
 
 
 const Grop_type = ({params}) => {
   const router = useRouter();
   const { Grop_type } = params; 
   const [persons, setPersons] = useState([]);
+  const { semi_role,userRole } = useContext(UserContext);
+
+
+
   useEffect(() => {
       const teamRef = ref(database, 'team');
       onValue(teamRef, (snapshot) => {
@@ -37,6 +42,7 @@ const Grop_type = ({params}) => {
     <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-16">
     {(Grop_type == 1 || Grop_type == 2) && (
   <>
+  {(userRole == "admin" || semi_role == "1") &&
     <div
       onClick={() => handleView(1)}
       className="block text-center rounded-xl border border-gray-100 p-4 shadow-sm cursor-pointer hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
@@ -49,7 +55,8 @@ const Grop_type = ({params}) => {
         {Grop_type == 1 ? "زهرات ا" : "مرشدات ا"}
       </h2>
     </div>
-    
+  }
+{(userRole == "admin" || semi_role == "2") &&
     <div
       onClick={() => handleView(2)}
       className="block text-center rounded-xl border border-gray-100 p-4 shadow-sm cursor-pointer hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
@@ -62,7 +69,8 @@ const Grop_type = ({params}) => {
         {Grop_type == 1 ? "زهرات ب" : "مرشدات ب"}
       </h2>
     </div>
-    
+}
+{(userRole == "admin" || semi_role == "3") &&
     <div
       onClick={() => handleView(3)}
       className="block text-center rounded-xl border border-gray-100 p-4 shadow-sm cursor-pointer hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
@@ -75,10 +83,10 @@ const Grop_type = ({params}) => {
         {Grop_type == 1 ? "زهرات ج" : "مرشدات ج"}
       </h2>
     </div>
+}
   </>
 )}
-{Grop_type == 3 &&
-
+{Grop_type == 3 && (userRole == "admin" || userRole == "Clan") &&
   persons.map((ele) => {
     return (
       <div

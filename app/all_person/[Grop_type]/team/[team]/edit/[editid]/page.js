@@ -1,15 +1,18 @@
 "use client"
 import React, { useContext, useEffect, useState } from 'react';
-import { ref as databaseRef, push, set, onValue, ref } from 'firebase/database';
+import { ref as databaseRef, set, onValue, get } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { database, storage } from '../firebase/Firebasepage'; // تأكد من استيراد storage بشكل صحيح
-import Breadcrumb from '../Breadcrumb/page';
-import Loading from '../loading';
+import { database, storage } from '../../../../../../firebase/Firebasepage'; 
+import Breadcrumb from '../../../../../../Breadcrumb/page';
+import Loading from '../../../../../../loading';
 import Swal from 'sweetalert2';
-import { UserContext } from '../context/page';
+import { UserContext } from '../../../../../../context/page';
+import { useRouter } from 'next/navigation';
 
-
-const AddPerson = () => {
+const Edit = ({ params }) => {
+  const { editid } = params; 
+  const { team } = params;
+  const { Grop_type } = params;
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
@@ -23,13 +26,12 @@ const AddPerson = () => {
   const [team_name, setteam_name] = useState('');
   const [loading, setLoading] = useState(false);
   const [Teams, setTeams] = useState([]);
-  const { userRole,semi_role } = useContext(UserContext);
+  const { userRole, semi_role } = useContext(UserContext);
   const [isDisabled, setIsDisabled] = useState(false); 
-
-
+  const router = useRouter();
 
   useEffect(() => {
-    const teamRef = ref(database, 'team');
+    const teamRef = databaseRef(database, 'team');
     onValue(teamRef, (snapshot) => {
       const data = snapshot.val();
       const teamList = [];
@@ -38,54 +40,76 @@ const AddPerson = () => {
       }
       setTeams(teamList);
     });
+
+    if (editid) {
+      const personRef = databaseRef(database, `person/${editid}`);
+      get(personRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          setName(data.name || '');
+          setPhone(data.phone || '');
+          setDate(data.date || '');
+          setAddress(data.address || '');
+          setAcademicYear(data.academic_year || '');
+          setFatherConfession(data.Father_confession || '');
+          setIgroub(data.groub || '');
+          setgroub_type(data.groub_type || '');
+          setteam_name(data.team_name || '');
+          if (data.image) {
+            setImageFile(data.image); 
+          }
+        }
+      }).catch((error) => {
+        console.error("Error fetching person data:", error);
+      });
+    }
+
     switch (userRole) {
       case 'admin':
         setIgroub("");
-        setIsDisabled(false)
+        setIsDisabled(false);
         break;
       case 'flower':
         setIgroub("1");
-        setIsDisabled(true)
+        setIsDisabled(true);
         break;
       case 'murshidats':
         setIgroub("2");
-        setIsDisabled(true)
-
+        setIsDisabled(true);
         break;
       case 'Clan':
         setIgroub("3");
-        setIsDisabled(true)
-
+        setIsDisabled(true);
         break;
       default:
         setIgroub("");
-        setIsDisabled(false)
-
+        setIsDisabled(false);
         break;
     }
+
     switch (semi_role) {
       case 'admin':
         setgroub_type("");
-        setIsDisabled(false)
+        setIsDisabled(false);
         break;
       case '1':
         setgroub_type("1");
-        setIsDisabled(true)
+        setIsDisabled(true);
         break;
       case '2':
         setgroub_type("2");
-        setIsDisabled(true)
+        setIsDisabled(true);
         break;
       case '3':
         setgroub_type("3");
-        setIsDisabled(true)
+        setIsDisabled(true);
         break;
       default:
         setgroub_type("");
-        setIsDisabled(false)
+        setIsDisabled(false);
         break;
     }
-  }, [userRole,semi_role]);
+  }, [userRole, semi_role, editid]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -105,15 +129,16 @@ const AddPerson = () => {
     setLoading(true);
     try {
       let imageUrl = '';
-      if (imageFile) {
+      if (imageFile && typeof imageFile !== 'string') {
         const imageRef = storageRef(storage, `person/${imageFile.name}`);
         await uploadBytes(imageRef, imageFile);
         imageUrl = await getDownloadURL(imageRef);
+      } else if (typeof imageFile === 'string') {
+        imageUrl = imageFile;
       }
 
-      const personRef = databaseRef(database, 'person');
-      const newPersonRef = push(personRef);
-      await set(newPersonRef, {
+      const personRef = databaseRef(database, `person/${editid}`);
+      await set(personRef, {
         name,
         phone,
         date,
@@ -121,16 +146,19 @@ const AddPerson = () => {
         academic_year: academicYear,
         Father_confession: fatherConfession,
         image: imageUrl,
-        groub: groub,
-        groub_type: groub_type,
-        team_name: team_name
+        groub,
+        groub_type,
+        team_name
       });
+
       setLoading(false);
       Swal.fire({
-        text: 'تم حفظ البيانات بنجاح',
+        text: 'تم تحديث البيانات بنجاح',
         icon: 'success',
         confirmButtonText: 'حسنًا'
       });
+      router.push(`/all_person/${Grop_type}/team/${team}`);
+
 
       setName('');
       setPhone('');
@@ -145,21 +173,19 @@ const AddPerson = () => {
     } catch (error) {
       setLoading(false);
       Swal.fire({
-        text: 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.',
+        text: 'حدث خطأ أثناء تحديث البيانات. يرجى المحاولة مرة أخرى.',
         icon: 'error',
         confirmButtonText: 'حسنًا'
       });
     }
   };
 
-
-
   return (
     <>
       {loading && <Loading />}
       <div>
         <section className="bg-gray-100">
-          <Breadcrumb name="اضافة" />
+          <Breadcrumb name="تعديل" />
           <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
               <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
@@ -232,7 +258,6 @@ const AddPerson = () => {
                       </div> : (groub == 3 ?
                         <div>
                           <label htmlFor='team_name'>اسم الرهط</label>
-
                           <select
                             className="w-full rounded-lg border-gray-200 p-3 text-sm border"
                             id="team_name"
@@ -241,15 +266,11 @@ const AddPerson = () => {
                             onChange={(e) => setteam_name(e.target.value)}
                           >
                             <option value="0">اختر الرهط</option>
-                            {Teams.map((ele) => {
-                              return (
-                                <option key={ele.id} value={ele.id}>
-                                  {ele.name}
-                                </option>
-                              );
-
-                            })
-                            }
+                            {Teams.map((ele) => (
+                              <option key={ele.id} value={ele.id}>
+                                {ele.name}
+                              </option>
+                            ))}
                           </select>
                         </div>
                         :
@@ -311,14 +332,12 @@ const AddPerson = () => {
                           type="file"
                           accept="image/*"
                           id="picture"
-                          required
                           onChange={handleImageChange}
                           className="sr-only"
                         />
                       </label>
                       {imageError && <p className="text-red-500">{imageError}</p>}
                     </div>
-
                   </div>
                   <div className="mt-4">
                     <button
@@ -338,4 +357,4 @@ const AddPerson = () => {
   );
 };
 
-export default AddPerson;
+export default Edit;

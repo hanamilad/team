@@ -7,6 +7,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import "./globals.css";
 import Loading from "./loading";
+import UserProvider from './context/page'; // تأكد من المسار الصحيح
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,10 +32,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-      <Suspense fallback={<Loading />}>
-                    {children}
-      </Suspense>
-</body>
+        <UserProvider>
+          <Suspense fallback={<Loading />}>
+            {children}
+          </Suspense>
+        </UserProvider>
+      </body>
     </html>
   );
 }

@@ -31,9 +31,6 @@ const Person = ({ params }) => {
   team == 1 ? type = "ا" : (team == 2 ? type = "ب" : (team == 3 ? type = "ج" : type = ""));
   Grop_type == 1 ? name = `زهرات ${type}` : (Grop_type == 2 ? name = `مرشدات ${type}` : name = "عشيرة");
 
-console.log(filteredPersons)
-console.log(Grop_type,"Grop_type")
-console.log(team,"team")
   const handleViewClick = (id) => {
     router.push(`/all_person/${Grop_type}/team/${team}/Info/${id}`);
   };
@@ -52,7 +49,9 @@ console.log(team,"team")
             console.error("Error deleting person:", error);
         });
 };
-const handleEditPerson = (person) => {
+const handleEditPerson = (editid) => {
+  router.push(`/all_person/${Grop_type}/team/${team}/edit/${editid}`);
+
 };
   return (
     <div>
@@ -82,6 +81,7 @@ const handleEditPerson = (person) => {
                       </button>
                       <button
                         className="Btn1"
+                        onClick={() => handleEditPerson(person.id)}
                       >
                         تعديل
                       </button>

@@ -1,11 +1,16 @@
 'use client'; // تأكد من أن هذا الكود ينفذ على جانب العميل
 
 import Link from 'next/link';
-import React from 'react';
+import React, { useContext } from 'react';
 import { auth } from '../firebase/Firebasepage'; // تأكد من المسار الصحيح
 import { signOut } from 'firebase/auth';
+import { UserContext } from '../context/page';
 
 const Section = () => {
+  const { userRole } = useContext(UserContext);
+
+
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -45,6 +50,7 @@ const Section = () => {
                 </span>
                 <h2 className="mt-2 font-bold">الاسماء</h2>
               </Link>
+              {(userRole == "admin" || userRole == "Clan") &&
               <Link
                 className="block text-center rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
                 href="/all_teams"
@@ -54,6 +60,7 @@ const Section = () => {
                 </span>
                 <h2 className="mt-2 font-bold">الرهوط</h2>
               </Link>
+              }
               <a
                 className="block bg-red-950 text-white text-center rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
                 href=""

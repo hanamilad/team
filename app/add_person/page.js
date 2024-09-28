@@ -1,8 +1,7 @@
 "use client"
 import React, { useContext, useEffect, useState } from 'react';
 import { ref as databaseRef, push, set, onValue, ref } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { database, storage } from '../firebase/Firebasepage'; // تأكد من استيراد storage بشكل صحيح
+import { database} from '../firebase/Firebasepage'; 
 import Breadcrumb from '../Breadcrumb/page';
 import Loading from '../loading';
 import Swal from 'sweetalert2';
@@ -16,15 +15,21 @@ const AddPerson = () => {
   const [address, setAddress] = useState('');
   const [academicYear, setAcademicYear] = useState('');
   const [fatherConfession, setFatherConfession] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [imageError, setImageError] = useState('');
   const [groub, setIgroub] = useState('');
   const [groub_type, setgroub_type] = useState('');
   const [team_name, setteam_name] = useState('');
+  const [type_house, settype_house] = useState('');
+  const [Church, setChurch] = useState('');
+  const [father_number, setfather_number] = useState('');
+  const [mather_number, setmather_number] = useState('');
+  const [brothers_num, setbrothers_num] = useState('');
+  const [medication_name, setmedication_name] = useState('');
+  const [hope, sethope] = useState('');
+  const [medication, setMedication] = useState(null);
   const [loading, setLoading] = useState(false);
   const [Teams, setTeams] = useState([]);
-  const { userRole,semi_role } = useContext(UserContext);
-  const [isDisabled, setIsDisabled] = useState(false); 
+  const { userRole, semi_role } = useContext(UserContext);
+  const [isDisabled, setIsDisabled] = useState(false);
 
 
 
@@ -85,31 +90,17 @@ const AddPerson = () => {
         setIsDisabled(false)
         break;
     }
-  }, [userRole,semi_role]);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 1 * 1024 * 1024) {
-        setImageError('حجم الصورة يجب أن لا يتجاو  1 ميجا بايت');
-        setImageFile(null);
-      } else {
-        setImageError('');
-        setImageFile(file);
-      }
-    }
-  };
+  }, [userRole, semi_role]);
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      let imageUrl = '';
-      if (imageFile) {
-        const imageRef = storageRef(storage, `person/${imageFile.name}`);
-        await uploadBytes(imageRef, imageFile);
-        imageUrl = await getDownloadURL(imageRef);
-      }
+
 
       const personRef = databaseRef(database, 'person');
       const newPersonRef = push(personRef);
@@ -120,10 +111,17 @@ const AddPerson = () => {
         address,
         academic_year: academicYear,
         Father_confession: fatherConfession,
-        image: imageUrl,
         groub: groub,
         groub_type: groub_type,
-        team_name: team_name
+        team_name: team_name,
+        type_house: type_house,
+        Church: Church,
+        mather_number: mather_number,
+        father_number: father_number,
+        brothers_num: brothers_num,
+        medication: medication,
+        medication_name: medication_name,
+        hope: hope
       });
       setLoading(false);
       Swal.fire({
@@ -138,10 +136,17 @@ const AddPerson = () => {
       setAddress('');
       setAcademicYear('');
       setFatherConfession('');
-      setImageFile(null);
       setIgroub('');
       setgroub_type('');
       setteam_name('');
+      settype_house('');
+      setChurch('');
+      setfather_number('');
+      setmather_number('');
+      setbrothers_num('');
+      setMedication('');
+      setmedication_name('');
+      sethope('');
     } catch (error) {
       setLoading(false);
       Swal.fire({
@@ -188,6 +193,13 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
+                      <label htmlFor='type_house'>نوع السكن</label>
+                      <select className="w-full rounded-lg border-gray-200 p-3 text-sm border" required id='type_house' value={type_house} onChange={(e) => settype_house(e.target.value)}>
+                        <option value="1">ايجار</option>
+                        <option value="2">تمليك</option>
+                      </select>
+                    </div>
+                    <div>
                       <label htmlFor='date'>تاريخ الميلاد</label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
@@ -225,6 +237,7 @@ const AddPerson = () => {
                           onChange={(e) => setgroub_type(e.target.value)}
                           disabled={isDisabled}
                         >
+                          <option value="">برجاء الاختيار</option>
                           <option value="1">ا</option>
                           <option value="2">ب</option>
                           <option value="3">ج</option>
@@ -266,6 +279,16 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
+                      <label htmlFor='Church'>الكنيسة التابعة لها </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="Church"
+                        value={Church}
+                        onChange={(e) => setChurch(e.target.value)}
+                      />
+                    </div>
+                    <div>
                       <label htmlFor='phone'>رقم التليفون</label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
@@ -287,37 +310,81 @@ const AddPerson = () => {
                         onChange={(e) => setAcademicYear(e.target.value)}
                       />
                     </div>
-                    <div className="flex flex-col items-center">
-                      <label
-                        htmlFor="picture"
-                        className="flex flex-col items-center justify-center w-full max-w-sm p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
-                      >
-                        <svg
-                          className="w-12 h-12 text-gray-400 mb-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M3 7h18M4 7l1 10h14l1-10H4z"
-                          />
-                        </svg>
-                        <span className="text-gray-600 text-sm font-medium">اختر صورة</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          id="picture"
-                          required
-                          onChange={handleImageChange}
-                          className="sr-only"
-                        />
-                      </label>
-                      {imageError && <p className="text-red-500">{imageError}</p>}
+                    <div>
+                      <label htmlFor='father_number'>(الاب)تلفون ولى الامر</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="father_number"
+                        value={father_number}
+                        required
+                        onChange={(e) => setfather_number(e.target.value)}
+                      />
                     </div>
+                    <div>
+                      <label htmlFor='mather_number'>(الام)تلفون ولى الامر</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="mather_number"
+                        value={mather_number}
+                        required
+                        onChange={(e) => setmather_number(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='brothers_num'>عدد الاخوات</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="number"
+                        min={1}
+                        id="brothers_num"
+                        value={brothers_num}
+                        required
+                        onChange={(e) => setbrothers_num(e.target.value)}
+                      />
+                    </div>
+                    <div className='flex items-center space-x-4'>
+                      <label>هل تأخذ أي نوع من الأدوية باستمرار؟</label>
+
+                      <select
+                          className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                          id="medication"
+                          value={medication}
+                          required
+                          onChange={(e) => setMedication(e.target.value)}
+                        >
+                          <option value="">برجاء الاختيار</option>
+                          <option value="1">نعم</option>
+                          <option value="2">لا</option>
+                        </select>
+                    </div>
+                    {medication == 1 ?
+                      <div>
+                      <label htmlFor='medication_name'>رجاء ذكر الدواء</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="medication_name"
+                        value={medication_name}
+                        required
+                        onChange={(e) => setmedication_name(e.target.value)}
+                      />
+                    </div>
+                     :
+                     ""
+                    }
+                    <div>
+                      <label htmlFor='hope'>الهوايات</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="hope"
+                        value={hope}
+                        onChange={(e) => sethope(e.target.value)}
+                      />
+                    </div>
+
 
                   </div>
                   <div className="mt-4">

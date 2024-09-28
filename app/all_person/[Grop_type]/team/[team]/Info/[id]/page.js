@@ -72,8 +72,21 @@ console.log(team_name,"team_name")
 <p className='text-end'><strong style={{ float: 'right', marginRight: '10px' }}>:العنوان</strong> {person.address}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:السنة الدراسية</strong> {person.academic_year}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:فريق</strong> {groubname} {groub_type ? groub_type : (team_name[0].name ? team_name[0].name : "")}</p>
-<p><strong style={{ float: 'right', marginRight: '10px' }}>:اعتراف الأب</strong> {person.Father_confession}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:اب الاعتراف</strong> {person.Father_confession}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:التاريخ</strong> {person.date}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:نوع السكن </strong> {person.type_house == 1  ? "ايجار" : " ملك "}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:الكنيسة التابعة لها </strong> {person.Church}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:(الاب)تلفون ولى الامر</strong> {person.father_number}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:(الام)تلفون ولى الامر</strong> {person.mather_number}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:عدد الاخوات</strong> {person.brothers_num}</p>
+{
+  person.medication_name !== "" ? 
+  <p><strong style={{ float: 'right', marginRight: '10px' }}>:اسم الدواء</strong> {person.medication_name}</p>
+  :
+""
+}
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:الهوايات</strong> {person.hope}</p>
+
 
         </div>
 

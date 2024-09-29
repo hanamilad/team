@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../../../../../../firebase/Firebasepage'; // تأكد من المسار الصحيح
 import Breadcrumb from '@/app/Breadcrumb/page';
-import Image from 'next/image';
 import Loading from '../../../../../../loading';
 
 const PersonelInfo = ({ params }) => {
@@ -70,7 +69,8 @@ if (teams_name && teams_name.length > 0) {
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:الكنيسة التابعة لها </strong> {person.Church}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:(الاب)تلفون ولى الامر</strong> {person.father_number}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:(الام)تلفون ولى الامر</strong> {person.mather_number}</p>
-<p><strong style={{ float: 'right', marginRight: '10px' }}>:عدد الاخوات / اسمائهم</strong> {person.brothers_num}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:عدد الاخوات</strong> {person.brothers_num}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:اسماء الاخوات</strong> {person.brothers_name}</p>
 {
   person.medication_name !== "" ? 
   <p><strong style={{ float: 'right', marginRight: '10px' }}>:اسم الدواء</strong> {person.medication_name}</p>

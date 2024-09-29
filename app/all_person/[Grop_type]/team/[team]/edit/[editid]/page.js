@@ -27,6 +27,7 @@ const Edit = ({ params }) => {
   const [academicYear, setAcademicYear] = useState('');
   const [fatherConfession, setFatherConfession] = useState('');
   const [groub, setIgroub] = useState('');
+  const [brothers_name, setbrothers_name] = useState('');
   const [groub_type, setgroub_type] = useState('');
   const [team_name, setteam_name] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,6 +69,7 @@ const Edit = ({ params }) => {
           setmedication_name(data.medication_name || '');
           sethope(data.hope || '');
           setMedication(data.medication || '');
+          setbrothers_name(data.brothers_name || '');
         }
       }).catch((error) => {
         console.error("Error fetching person data:", error);
@@ -143,7 +145,8 @@ const Edit = ({ params }) => {
         brothers_num,
         medication_name,
         hope,
-        medication
+        medication,
+        brothers_name
       });
 
       setLoading(false);
@@ -171,6 +174,7 @@ const Edit = ({ params }) => {
       setbrothers_num('');
       sethope('');
       setMedication('');
+      setbrothers_name('');
     } catch (error) {
       setLoading(false);
       Swal.fire({
@@ -351,7 +355,7 @@ const Edit = ({ params }) => {
                       />
                     </div>
                     <div>
-                      <label htmlFor='brothers_num'>عدد الاخوات / اسمائهم</label>
+                      <label htmlFor='brothers_num'>عدد الاخوات </label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
                         type="text"
@@ -359,6 +363,17 @@ const Edit = ({ params }) => {
                         value={brothers_num}
                         required
                         onChange={(e) => setbrothers_num(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='brothers_num'>اسماء الاخوات</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="brothers_name"
+                        value={brothers_name}
+                        required
+                        onChange={(e) => setbrothers_name(e.target.value)}
                       />
                     </div>
                     <div className='flex items-center space-x-4'>

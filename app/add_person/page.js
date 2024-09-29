@@ -23,6 +23,7 @@ const AddPerson = () => {
   const [father_number, setfather_number] = useState('');
   const [mather_number, setmather_number] = useState('');
   const [brothers_num, setbrothers_num] = useState('');
+  const [brothers_name, setbrothers_name] = useState('');
   const [medication_name, setmedication_name] = useState('');
   const [hope, sethope] = useState('');
   const [medication, setMedication] = useState(null);
@@ -121,7 +122,8 @@ const AddPerson = () => {
         brothers_num: brothers_num,
         medication: medication,
         medication_name: medication_name,
-        hope: hope
+        hope: hope,
+        brothers_name: brothers_name,
       });
       setLoading(false);
       Swal.fire({
@@ -147,6 +149,7 @@ const AddPerson = () => {
       setMedication('');
       setmedication_name('');
       sethope('');
+      setbrothers_name('');
     } catch (error) {
       setLoading(false);
       Swal.fire({
@@ -300,7 +303,7 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor='academic_year'> / السنة الدراسية(اسم المدرسة او الكلية )</label>
+                      <label htmlFor='academic_year'>السنة الدراسية / (اسم المدرسة او الكلية )</label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
                         type="text"
@@ -333,7 +336,7 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor='brothers_num'>عدد الاخوات / اسمائهم</label>
+                      <label htmlFor='brothers_num'>عدد الاخوات </label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
                         type="text"
@@ -341,6 +344,17 @@ const AddPerson = () => {
                         value={brothers_num}
                         required
                         onChange={(e) => setbrothers_num(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='brothers_num'>اسماء الاخوات</label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="brothers_name"
+                        value={brothers_name}
+                        required
+                        onChange={(e) => setbrothers_name(e.target.value)}
                       />
                     </div>
                     <div className='flex items-center space-x-4'>

@@ -292,7 +292,7 @@ const AddPerson = () => {
                       <label htmlFor='phone'>رقم التليفون</label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
-                        type="tel"
+                        type="text"
                         id="phone"
                         value={phone}
                         required
@@ -300,7 +300,7 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor='academic_year'>السنة الدراسية</label>
+                      <label htmlFor='academic_year'> / السنة الدراسية(اسم المدرسة او الكلية )</label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
                         type="text"
@@ -333,11 +333,10 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor='brothers_num'>عدد الاخوات</label>
+                      <label htmlFor='brothers_num'>عدد الاخوات / اسمائهم</label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
-                        type="number"
-                        min={1}
+                        type="text"
                         id="brothers_num"
                         value={brothers_num}
                         required

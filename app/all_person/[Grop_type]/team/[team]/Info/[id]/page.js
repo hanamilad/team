@@ -36,7 +36,7 @@ const PersonelInfo = ({ params }) => {
     groubname = "مرشدات";
   }
   if(person.groub == 3){
-    groubname = "عشيرة";
+    groubname = " ";
   }
   var groub_type;
   if(person.groub_type == 1 ){
@@ -52,33 +52,25 @@ const PersonelInfo = ({ params }) => {
 if (teams_name && teams_name.length > 0) {
   team_name = teams_name.filter((ele) => ele.id == person.team_name);
 }
-console.log(team_name,"team_name")
 
 
   return (
     <div>
       <Breadcrumb name={person.name} />
-      <div className='col-span-2 flex justify-around '>
-        <div>
-          {person.image ? (
-            <Image src={person.image} width={150}  height={150} alt={`${person.name}'s image`} />
-          ) : (
-            <div className='w-[150px] h-[150px] bg-gray-500 rounded-full text-center'><i className="fa-solid fa-user text-[100px]"></i></div>
-          )}
-        </div>
+      <div className='col-span-2 flex justify-end '>
         <div className='m-3 flex flex-col gap-4 items-end'>
         <p><strong style={{ float: 'right', marginRight: '10px' }}>:الاسم</strong> {person.name}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:رقم الهاتف</strong> {person.phone}</p>
 <p className='text-end'><strong style={{ float: 'right', marginRight: '10px' }}>:العنوان</strong> {person.address}</p>
-<p><strong style={{ float: 'right', marginRight: '10px' }}>:السنة الدراسية</strong> {person.academic_year}</p>
-<p><strong style={{ float: 'right', marginRight: '10px' }}>:فريق</strong> {groubname} {groub_type ? groub_type : (team_name[0].name ? team_name[0].name : "")}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:السنة الدراسية / (اسم المدرسة او الكلية )</strong> {person.academic_year}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:{person.groub == 3 ? "رهط" : "فريق"}</strong> {groubname} {groub_type ? groub_type : (team_name[0].name ? team_name[0].name : "")}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:اب الاعتراف</strong> {person.Father_confession}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:التاريخ</strong> {person.date}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:نوع السكن </strong> {person.type_house == 1  ? "ايجار" : " ملك "}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:الكنيسة التابعة لها </strong> {person.Church}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:(الاب)تلفون ولى الامر</strong> {person.father_number}</p>
 <p><strong style={{ float: 'right', marginRight: '10px' }}>:(الام)تلفون ولى الامر</strong> {person.mather_number}</p>
-<p><strong style={{ float: 'right', marginRight: '10px' }}>:عدد الاخوات</strong> {person.brothers_num}</p>
+<p><strong style={{ float: 'right', marginRight: '10px' }}>:عدد الاخوات / اسمائهم</strong> {person.brothers_num}</p>
 {
   person.medication_name !== "" ? 
   <p><strong style={{ float: 'right', marginRight: '10px' }}>:اسم الدواء</strong> {person.medication_name}</p>

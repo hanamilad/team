@@ -16,6 +16,8 @@ const AllPerson = () => {
     router.push(`/all_person/${Grop_type}`);
   };
 
+  console.log(userRole)
+
   return (
     <div>
     <Breadcrumb name="الفرق" />

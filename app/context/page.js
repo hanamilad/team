@@ -1,3 +1,4 @@
+"use client";
 import React, { createContext, useState, useEffect } from 'react';
 import { getDatabase, ref, get } from 'firebase/database';
 import { auth } from '../firebase/Firebasepage'; // تأكد من المسار الصحيح

@@ -44,6 +44,7 @@ const AddPerson = () => {
       }
       setTeams(teamList);
     });
+
     switch (userRole) {
       case 'admin':
         setIgroub("");
@@ -56,41 +57,42 @@ const AddPerson = () => {
       case 'murshidats':
         setIgroub("2");
         setIsDisabled(true)
-
+        
         break;
-      case 'Clan':
-        setIgroub("3");
-        setIsDisabled(true)
+        case 'Clan':
+          setIgroub("3");
+          setIsDisabled(true)
+          
+          break;
+          default:
+            setIgroub("");
+            setIsDisabled(false)
+            
+            break;
+          }
+          console.log(semi_role)
 
-        break;
-      default:
-        setIgroub("");
-        setIsDisabled(false)
-
-        break;
+    if(userRole !== 'admin'){
+      switch (semi_role) {
+        case '1':
+          setgroub_type("1");
+          setIsDisabled(true)
+          break;
+        case '2':
+          setgroub_type("2");
+          setIsDisabled(true)
+          break;
+        case '3':
+          setgroub_type("3");
+          setIsDisabled(true)
+          break;
+        default:
+          setgroub_type("");
+          setIsDisabled(false)
+          break;
+      }
     }
-    switch (semi_role) {
-      case 'admin':
-        setgroub_type("");
-        setIsDisabled(false)
-        break;
-      case '1':
-        setgroub_type("1");
-        setIsDisabled(true)
-        break;
-      case '2':
-        setgroub_type("2");
-        setIsDisabled(true)
-        break;
-      case '3':
-        setgroub_type("3");
-        setIsDisabled(true)
-        break;
-      default:
-        setgroub_type("");
-        setIsDisabled(false)
-        break;
-    }
+
 
   }, [userRole, semi_role]);
 
@@ -159,6 +161,10 @@ const AddPerson = () => {
       });
     }
   };
+
+
+
+  console.log(isDisabled,"ni")
 
 
 

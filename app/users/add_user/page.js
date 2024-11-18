@@ -11,7 +11,7 @@ const AddUser = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user'); // افتراضيًا مستخدم عادي
+  const [role, setRole] = useState('flower'); // افتراضيًا مستخدم عادي
   const [loading, setLoading] = useState(false);
   const [mini_role, setmini_role] = useState('1');
 
@@ -44,7 +44,7 @@ const AddUser = () => {
       setName('');
       setEmail('');
       setPassword('');
-      setRole('user');
+      setRole('flower');
       setmini_role('1')
     } catch (error) {
       setLoading(false);

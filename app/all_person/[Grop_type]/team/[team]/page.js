@@ -76,9 +76,15 @@ const Person = ({ params }) => {
     settext(e.target.value);
   };
 
-  var filteredPersonsarray = filteredPersons.filter((ele) =>
-    ele.name.toLowerCase().includes(text.toLowerCase())
-  );
+  // var filteredPersonsarray = filteredPersons.filter((ele) =>
+  //   ele.name.toLowerCase().includes(text.toLowerCase())
+  // );
+
+
+  var filteredPersonsarray = filteredPersons
+  .filter((ele) => ele.name.toLowerCase().includes(text.toLowerCase()))
+  .sort((a, b) => a.name.localeCompare(b.name, 'ar')); // ترتيب الأسماء بالعربية
+
 
   // دالة لتصدير البيانات إلى Excel
   const handleDownloadExcel = () => {

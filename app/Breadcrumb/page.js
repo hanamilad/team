@@ -1,11 +1,12 @@
 "use client";
 import { useRouter } from 'next/navigation';
+import Notifications from '../notification/page';
 
 const Breadcrumb = ({ name }) => {
   const router = useRouter();
   return (
     <div>
-      <nav aria-label="Breadcrumb" className="flex">
+      <nav aria-label="Breadcrumb" className="flex items-center justify-between">
         <ol className="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
           <li className="flex items-center">
             <div
@@ -47,6 +48,9 @@ const Breadcrumb = ({ name }) => {
             </a>
           </li>
         </ol>
+        <div>
+        <Notifications />
+        </div>
       </nav></div>
   )
 }

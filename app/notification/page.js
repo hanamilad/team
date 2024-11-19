@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
 import { UserContext } from '../context/page';
 import { database } from "../firebase/Firebasepage";
+import Link from "next/link";
 
 const Notifications = () => {
     const [showNotifications, setShowNotifications] = useState(false);
@@ -30,23 +31,49 @@ const Notifications = () => {
                 const person = data[key];
                 if (userRole == 'admin') {
                     if (calculateAge(person.date) >= 12 && person.groub == '1' ) {
-                        filteredNotifications.push(person.name +'الرجاء نقل  الى مرشدات');
+                        filteredNotifications.push(
+                            <Link 
+                            key={key} 
+                            href={`/all_person/${person.groub}/team/${person.groub_type}/edit/${key}`}
+                        >
+                            {`${person.name} الرجاء نقل إلى مرشدات`}
+                        </Link>                    
+                        );
                     }
                     if (calculateAge(person.date) >= 16 && person.groub == '2' ) {
-                        filteredNotifications.push(person.name +'الرجاء نقل  الى عشيره');
+                        filteredNotifications.push(
+                        <Link 
+                            key={key} 
+                            href={`/all_person/${person.groub}/team/${person.groub_type}/edit/${key}`}
+                        >
+                            {`${person.name} الرجاء نقل  الى عشيره`}
+                        </Link>  
+                        );
                     }
                 }
                 if (userRole == 'flower') {
                     if (person.groub == '1' && (person.groub_type == semi_role)) {
                         if (calculateAge(person.date) >= 12) {
-                            filteredNotifications.push(person.name +'الرجاء نقل  الى مرشدات');
+                            filteredNotifications.push(                           
+                            <Link 
+                                key={key} 
+                                href={`/all_person/${person.groub}/team/${person.groub_type}/edit/${key}`}
+                            >
+                                {`${person.name} الرجاء نقل إلى مرشدات`}
+                            </Link>  );
                         }
                     }
                 }
                 if (userRole == 'murshidats') {
                     if (person.groub == '2' && (person.groub_type == semi_role)) {
                         if (calculateAge(person.date) >= 16) {
-                            filteredNotifications.push(person.name +'الرجاء نقل  الى عشيره');
+                            filteredNotifications.push(                        
+                            <Link 
+                                key={key} 
+                                href={`/all_person/${person.groub}/team/${person.groub_type}/edit/${key}`}
+                            >
+                                {`${person.name} الرجاء نقل  الى عشيره`}
+                            </Link> );
                         }
                     }
                 }
@@ -91,7 +118,9 @@ const Notifications = () => {
                                     <div className="flex-shrink-0 bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
                                         {index + 1}
                                     </div>
-                                    <span className="ml-3">{notification}</span>
+                                    <span className="ml-3 cursor-pointer">
+                                    {notification}
+                                    </span>
                                 </li>
                             ))
                         ) : (

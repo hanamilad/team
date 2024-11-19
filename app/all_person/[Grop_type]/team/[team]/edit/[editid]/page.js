@@ -98,29 +98,27 @@ const Edit = ({ params }) => {
         setIsDisabled(false);
         break;
     }
+if(userRole !== 'admin'){
+  switch (semi_role) {
+    case '1':
+      setgroub_type("1");
+      setIsDisabled(true);
+      break;
+    case '2':
+      setgroub_type("2");
+      setIsDisabled(true);
+      break;
+    case '3':
+      setgroub_type("3");
+      setIsDisabled(true);
+      break;
+    default:
+      setgroub_type("");
+      setIsDisabled(false);
+      break;
+  }
+}
 
-    switch (semi_role) {
-      case 'admin':
-        setgroub_type("");
-        setIsDisabled(false);
-        break;
-      case '1':
-        setgroub_type("1");
-        setIsDisabled(true);
-        break;
-      case '2':
-        setgroub_type("2");
-        setIsDisabled(true);
-        break;
-      case '3':
-        setgroub_type("3");
-        setIsDisabled(true);
-        break;
-      default:
-        setgroub_type("");
-        setIsDisabled(false);
-        break;
-    }
   }, [userRole, semi_role, editid]);
 
   const handleSubmit = async (e) => {

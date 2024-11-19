@@ -32,7 +32,7 @@ export default function Home() {
       const inactiveTime = currentTime - lastActive;
 
       // التحقق إذا مر 3 دقائق
-      if (inactiveTime >= 3 * 60 * 1000) {
+      if (inactiveTime >= 1 * 60 * 1000) {
         const auth = getAuth();
         signOut(auth).then(() => {
           alert("تم تسجيل الخروج بسبب عدم النشاط لفترة طويلة.");

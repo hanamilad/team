@@ -29,21 +29,24 @@ const Notifications = () => {
             for (const key in data) {
                 const person = data[key];
                 if (userRole == 'admin') {
-                    if (calculateAge(person.date) >= 12) {
-                        filteredNotifications.push(person.name);
+                    if (calculateAge(person.date) >= 12 && person.groub == '1' ) {
+                        filteredNotifications.push(person.name +'الرجاء نقل  الى مرشدات');
+                    }
+                    if (calculateAge(person.date) >= 16 && person.groub == '2' ) {
+                        filteredNotifications.push(person.name +'الرجاء نقل  الى عشيره');
                     }
                 }
                 if (userRole == 'flower') {
                     if (person.groub == '1' && (person.groub_type == semi_role)) {
                         if (calculateAge(person.date) >= 12) {
-                            filteredNotifications.push(person.name);
+                            filteredNotifications.push(person.name +'الرجاء نقل  الى مرشدات');
                         }
                     }
                 }
                 if (userRole == 'murshidats') {
                     if (person.groub == '2' && (person.groub_type == semi_role)) {
                         if (calculateAge(person.date) >= 16) {
-                            filteredNotifications.push(person.name);
+                            filteredNotifications.push(person.name +'الرجاء نقل  الى عشيره');
                         }
                     }
                 }

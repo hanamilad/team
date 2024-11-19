@@ -26,7 +26,7 @@ const Section = () => {
         <div className="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
           <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-16">
             <div className="mx-auto max-w-lg text-center lg:mx-0 ltr:lg:text-left rtl:lg:text-right">
-              <h2 className="text-3xl font-bold sm:text-4xl"> كشافة القديس بولس الرسول كنيسة العذراء مريم وابى سيفين مجموعه 4</h2>
+              <h2 className="text-3xl font-bold sm:text-4xl"> مجموعه القديس بولس الرسول الكشفيه كنيسة السيدة العذراء مريم والشهيد العظيم ابى سيفين مجموعه البنات (4)</h2>
               <img src='logo.jpg' className='w-[50%]' />
             </div>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">

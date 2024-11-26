@@ -53,20 +53,24 @@ const Person = ({ params }) => {
   };
 
   const handleDelete = (id) => {
-    const personRef = ref(database, `person/${id}`);
-    remove(personRef)
-      .then(() => {
-        setPersons(persons.filter((person) => person.id !== id));
-        Swal.fire({
-          text: 'تم حذف البيانات بنجاح',
-          icon: 'success',
-          confirmButtonText: 'حسنًا',
+    const isConfirmed = confirm("هل انت متأكد أنك تريد الحذف؟"); 
+    if (isConfirmed) {
+      const personRef = ref(database, `person/${id}`);
+      remove(personRef)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+          Swal.fire({
+            text: 'تم حذف البيانات بنجاح',
+            icon: 'success',
+            confirmButtonText: 'حسنًا',
+          });
+        })
+        .catch((error) => {
+          console.error("Error deleting person:", error);
         });
-      })
-      .catch((error) => {
-        console.error("Error deleting person:", error);
-      });
+    }
   };
+  
 
   const handleEditPerson = (editid) => {
     router.push(`/all_person/${Grop_type}/team/${team}/edit/${editid}`);

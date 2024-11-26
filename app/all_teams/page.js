@@ -25,6 +25,8 @@ const Team = () => {
     }, []);
 
     const handleDelete = (id) => {
+       var is_confirm =  confirm("هل انتا متاكد من عملية الحذف؟");
+       if(is_confirm){
         const personRef = ref(database, `team/${id}`);
         remove(personRef)
             .then(() => {
@@ -38,6 +40,8 @@ const Team = () => {
             .catch(error => {
                 console.error("Error deleting person:", error);
             });
+        }
+        
     };
 
     const handleEdit = (id, newName) => {

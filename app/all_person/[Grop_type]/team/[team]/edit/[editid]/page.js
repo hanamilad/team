@@ -27,7 +27,13 @@ const Edit = ({ params }) => {
   const [academicYear, setAcademicYear] = useState('');
   const [fatherConfession, setFatherConfession] = useState('');
   const [groub, setIgroub] = useState('');
-  const [brothers_name, setbrothers_name] = useState('');
+
+
+  const [leader_name, setleader_name] = useState('');
+  const [date_in, setdate_in] = useState('');
+  const [Vanguard_Name, setVanguard_Name] = useState('');
+
+
   const [groub_type, setgroub_type] = useState('');
   const [team_name, setteam_name] = useState('');
   const [loading, setLoading] = useState(false);
@@ -69,7 +75,9 @@ const Edit = ({ params }) => {
           setmedication_name(data.medication_name || '');
           sethope(data.hope || '');
           setMedication(data.medication || '');
-          setbrothers_name(data.brothers_name || '');
+          setleader_name(data.leader_name || '');
+          setdate_in(data.date_in || '');
+          setVanguard_Name(data.Vanguard_Name || '');
         }
       }).catch((error) => {
         console.error("Error fetching person data:", error);
@@ -138,13 +146,15 @@ if(userRole !== 'admin'){
         team_name,
         type_house,
         Church,
+        date_in,
+        leader_name,
+        Vanguard_Name,
         father_number,
         mather_number,
         brothers_num,
         medication_name,
         hope,
-        medication,
-        brothers_name
+        medication
       });
 
       setLoading(false);
@@ -166,13 +176,15 @@ if(userRole !== 'admin'){
       setteam_name('');
       settype_house('');
       setChurch('');
+      setleader_name('');
+      setdate_in('');
+      setVanguard_Name('');
       setmedication_name('');
       setfather_number('');
       setmather_number('');
       setbrothers_num('');
       sethope('');
       setMedication('');
-      setbrothers_name('');
     } catch (error) {
       setLoading(false);
       Swal.fire({
@@ -194,7 +206,7 @@ if(userRole !== 'admin'){
               <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label htmlFor='name'>الاسم رباعى</label>
+                    <label htmlFor='name'>الاسم ثلاثى</label>
                     <input
                       className="w-full rounded-lg border-gray-200 p-3 text-sm border "
                       type="text"
@@ -278,6 +290,32 @@ if(userRole !== 'admin'){
                         </div>
                         :
                         <></>)}
+                        {
+                      groub == 2 ?
+                      <div>
+                      <label htmlFor='Vanguard_Name'>اسم الطليعة  </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="Vanguard_Name"
+                        value={Vanguard_Name}
+                        onChange={(e) => setVanguard_Name(e.target.value)}
+                      />
+                    </div>
+                       :(groub == 1 ?
+                        <div>
+                      <label htmlFor='Vanguard_Name'>اسم السدادسى  </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="Vanguard_Name"
+                        value={Vanguard_Name}
+                        onChange={(e) => setVanguard_Name(e.target.value)}
+                      />
+                    </div>
+                       : '')
+                    }
+
                     <div>
                       <label htmlFor='father'>اب الاعتراف</label>
                       <input
@@ -287,6 +325,26 @@ if(userRole !== 'admin'){
                         value={fatherConfession}
                         required
                         onChange={(e) => setFatherConfession(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='date_in'>تاريخ الانضمام </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="date"
+                        id="date_in"
+                        value={date_in}
+                        onChange={(e) => setdate_in(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='leader_name'>قائد الفرقة وقت الانضام </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="leader_name"
+                        value={leader_name}
+                        onChange={(e) => setleader_name(e.target.value)}
                       />
                     </div>
                     <div>
@@ -361,17 +419,6 @@ if(userRole !== 'admin'){
                         value={brothers_num}
                         required
                         onChange={(e) => setbrothers_num(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor='brothers_num'>اسماء الاخوات</label>
-                      <input
-                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
-                        type="text"
-                        id="brothers_name"
-                        value={brothers_name}
-                        required
-                        onChange={(e) => setbrothers_name(e.target.value)}
                       />
                     </div>
                     <div className='flex items-center space-x-4'>

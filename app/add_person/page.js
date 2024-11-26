@@ -1,6 +1,6 @@
 "use client"
 import React, { useContext, useEffect, useState } from 'react';
-import { ref as databaseRef, push, set, onValue, ref } from 'firebase/database';
+import { ref as databaseRef, push, set,get, onValue, ref } from 'firebase/database';
 import { database} from '../firebase/Firebasepage'; 
 import Breadcrumb from '../Breadcrumb/page';
 import Loading from '../loading';
@@ -23,7 +23,9 @@ const AddPerson = () => {
   const [father_number, setfather_number] = useState('');
   const [mather_number, setmather_number] = useState('');
   const [brothers_num, setbrothers_num] = useState('');
-  const [brothers_name, setbrothers_name] = useState('');
+  const [leader_name, setleader_name] = useState('');
+  const [date_in, setdate_in] = useState('');
+  const [Vanguard_Name, setVanguard_Name] = useState('');
   const [medication_name, setmedication_name] = useState('');
   const [hope, sethope] = useState('');
   const [medication, setMedication] = useState(null);
@@ -99,13 +101,103 @@ const AddPerson = () => {
 
 
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   try {
+  //     const personRef = databaseRef(database, 'person');
+  //     const newPersonRef = push(personRef);
+
+
+  //     await set(newPersonRef, {
+  //       name,
+  //       phone,
+  //       date,
+  //       address,
+  //       academic_year: academicYear,
+  //       Father_confession: fatherConfession,
+  //       groub: groub,
+  //       groub_type: groub_type,
+  //       team_name: team_name,
+  //       type_house: type_house,
+  //       Church: Church,
+  //       date_in: date_in,
+  //       leader_name: leader_name,
+  //       Vanguard_Name: Vanguard_Name,
+  //       mather_number: mather_number,
+  //       father_number: father_number,
+  //       brothers_num: brothers_num,
+  //       medication: medication,
+  //       medication_name: medication_name,
+  //       hope: hope
+  //       });
+  //     setLoading(false);
+  //     Swal.fire({
+  //       text: 'تم حفظ البيانات بنجاح',
+  //       icon: 'success',
+  //       confirmButtonText: 'حسنًا'
+  //     });
+
+  //     setName('');
+  //     setPhone('');
+  //     setDate('');
+  //     setAddress('');
+  //     setAcademicYear('');
+  //     setFatherConfession('');
+  //     setIgroub('');
+  //     setgroub_type('');
+  //     setteam_name('');
+  //     settype_house('');
+  //     setChurch('');
+  //     setleader_name('');
+  //     setdate_in('');
+  //     setVanguard_Name('');
+  //     setfather_number('');
+  //     setmather_number('');
+  //     setbrothers_num('');
+  //     setMedication('');
+  //     setmedication_name('');
+  //     sethope('');
+  //   } catch (error) {
+  //     setLoading(false);
+  //     Swal.fire({
+  //       text: 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.',
+  //       icon: 'error',
+  //       confirmButtonText: 'حسنًا'
+  //     });
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
-
-
+      // التحقق من وجود الاسم في قاعدة البيانات
       const personRef = databaseRef(database, 'person');
+      const snapshot = await get(personRef);  // جلب جميع البيانات من قاعدة البيانات
+      let nameExists = false;
+  
+      snapshot.forEach((childSnapshot) => {
+        const personData = childSnapshot.val();
+        if (personData.name === name) {
+          nameExists = true;
+        }
+      });
+  
+      // إذا كان الاسم موجودًا، نقوم بإيقاف الإجراء وإظهار رسالة
+      if (nameExists) {
+        setLoading(false);
+        Swal.fire({
+          text: 'الاسم موجود بالفعل في قاعدة البيانات.',
+          icon: 'warning',
+          confirmButtonText: 'حسنًا'
+        });
+        return;  // التوقف عن تنفيذ الكود إذا كان الاسم موجودًا
+      }
+  
+      // إذا لم يكن الاسم موجودًا، نقوم بإضافته إلى قاعدة البيانات
       const newPersonRef = push(personRef);
       await set(newPersonRef, {
         name,
@@ -114,26 +206,30 @@ const AddPerson = () => {
         address,
         academic_year: academicYear,
         Father_confession: fatherConfession,
-        groub: groub,
-        groub_type: groub_type,
-        team_name: team_name,
-        type_house: type_house,
-        Church: Church,
-        mather_number: mather_number,
-        father_number: father_number,
-        brothers_num: brothers_num,
-        medication: medication,
-        medication_name: medication_name,
-        hope: hope,
-        brothers_name: brothers_name,
+        groub,
+        groub_type,
+        team_name,
+        type_house,
+        Church,
+        date_in,
+        leader_name,
+        Vanguard_Name,
+        mather_number,
+        father_number,
+        brothers_num,
+        medication,
+        medication_name,
+        hope
       });
+  
       setLoading(false);
       Swal.fire({
         text: 'تم حفظ البيانات بنجاح',
         icon: 'success',
         confirmButtonText: 'حسنًا'
       });
-
+  
+      // مسح الحقول بعد حفظ البيانات
       setName('');
       setPhone('');
       setDate('');
@@ -145,15 +241,19 @@ const AddPerson = () => {
       setteam_name('');
       settype_house('');
       setChurch('');
+      setleader_name('');
+      setdate_in('');
+      setVanguard_Name('');
       setfather_number('');
       setmather_number('');
       setbrothers_num('');
       setMedication('');
       setmedication_name('');
       sethope('');
-      setbrothers_name('');
+  
     } catch (error) {
       setLoading(false);
+      console.error("Error during data save:", error);  // طباعة تفاصيل الخطأ
       Swal.fire({
         text: 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.',
         icon: 'error',
@@ -161,10 +261,14 @@ const AddPerson = () => {
       });
     }
   };
+  
 
 
+  
 
-  console.log(isDisabled,"ni")
+
+  
+
 
 
 
@@ -179,7 +283,7 @@ const AddPerson = () => {
               <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label htmlFor='name'>الاسم رباعى</label>
+                    <label htmlFor='name'>الاسم ثلاثى</label>
                     <input
                       className="w-full rounded-lg border-gray-200 p-3 text-sm border "
                       type="text"
@@ -287,6 +391,31 @@ const AddPerson = () => {
                         onChange={(e) => setFatherConfession(e.target.value)}
                       />
                     </div>
+                    {
+                      groub == 2 ?
+                      <div>
+                      <label htmlFor='Vanguard_Name'>اسم الطليعة  </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="Vanguard_Name"
+                        value={Vanguard_Name}
+                        onChange={(e) => setVanguard_Name(e.target.value)}
+                      />
+                    </div>
+                       :(groub == 1 ?
+                        <div>
+                      <label htmlFor='Vanguard_Name'>اسم السدادسى  </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="Vanguard_Name"
+                        value={Vanguard_Name}
+                        onChange={(e) => setVanguard_Name(e.target.value)}
+                      />
+                    </div>
+                       : '')
+                    }
                     <div>
                       <label htmlFor='Church'>الكنيسة التابعة لها </label>
                       <input
@@ -295,6 +424,26 @@ const AddPerson = () => {
                         id="Church"
                         value={Church}
                         onChange={(e) => setChurch(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='date_in'>تاريخ الانضمام </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="date"
+                        id="date_in"
+                        value={date_in}
+                        onChange={(e) => setdate_in(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='leader_name'>قائد الفرقة وقت الانضام </label>
+                      <input
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        type="text"
+                        id="leader_name"
+                        value={leader_name}
+                        onChange={(e) => setleader_name(e.target.value)}
                       />
                     </div>
                     <div>
@@ -350,17 +499,6 @@ const AddPerson = () => {
                         value={brothers_num}
                         required
                         onChange={(e) => setbrothers_num(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor='brothers_num'>اسماء الاخوات</label>
-                      <input
-                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
-                        type="text"
-                        id="brothers_name"
-                        value={brothers_name}
-                        required
-                        onChange={(e) => setbrothers_name(e.target.value)}
                       />
                     </div>
                     <div className='flex items-center space-x-4'>

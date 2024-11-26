@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import { ref as databaseRef, set, get, update } from 'firebase/database';
+import { ref as databaseRef, set } from 'firebase/database';
 import { database, auth } from '../../firebase/Firebasepage';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
 import Breadcrumb from '../../Breadcrumb/page';
 import Loading from '../../loading';
 import Swal from 'sweetalert2';
@@ -15,45 +15,67 @@ const AddUser = () => {
   const [loading, setLoading] = useState(false);
   const [mini_role, setmini_role] = useState('1');
 
+  // دالة لإعادة تعيين الحقول
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setRole('flower');
+    setmini_role('1');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      // تحقق مما إذا كان البريد الإلكتروني مسجلاً مسبقًا
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.length > 0) {
+        // البريد الإلكتروني موجود بالفعل
+        Swal.fire({
+          text: "البريد الإلكتروني مستخدم بالفعل. الرجاء اختيار بريد إلكتروني آخر.",
+          icon: "error",
+          confirmButtonText: "حسنًا",
+        });
+        setLoading(false);
+        return;
+      }
 
-      const userRef = databaseRef(database, `users/${user.uid}`);
-      await set(userRef, {
-        userId: user.uid,
-        email:email,
-        username: name,
-        role: role,
-        semi_role:mini_role
+      // إرسال البيانات إلى الخادم (API)
+      const response = await fetch("/api/addUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password, role, mini_role }),
       });
 
-      await updateProfile(user, { displayName: name });
+      const data = await response.json();
 
-      setLoading(false);
-      Swal.fire({
-        text: 'تم حفظ البيانات بنجاح',
-        icon: 'success',
-        confirmButtonText: 'حسنًا'
-      });
-
-      setName('');
-      setEmail('');
-      setPassword('');
-      setRole('flower');
-      setmini_role('1')
+      if (response.ok && data.success) {
+        Swal.fire({
+          text: data.message || "تم حفظ البيانات بنجاح",  
+          icon: "success",
+          confirmButtonText: "حسنًا",
+        });
+        resetForm();
+      } else {
+        Swal.fire({
+          text: data.message || "حدث خطأ غير متوقع",  
+          icon: "error",
+          confirmButtonText: "حسنًا",
+        });
+      }
     } catch (error) {
-      setLoading(false);
+      console.error("Error submitting form:", error);
       Swal.fire({
-        text: 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.',
-        icon: 'error',
-        confirmButtonText: 'حسنًا'
+        text: "حدث خطأ أثناء الاتصال بالخادم.",
+        icon: "error",
+        confirmButtonText: "حسنًا",
       });
-      console.error('Error adding user:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,24 +136,21 @@ const AddUser = () => {
                       <option value="admin">ادمن</option>
                     </select>
                   </div>
-                  {role !== 'admin' ? 
-                        <div>
-                          <label htmlFor="mini_role">نوع المستخدم</label>
-                          <select
-                            className="w-full rounded-lg border-gray-200 p-3 text-sm border"
-                            id="mini_role"
-                            value={mini_role}
-                            onChange={(e) => setmini_role(e.target.value)}
-                          >
-                            <option value="1">ا</option>
-                            <option value="2">ب</option>
-                            <option value="3">ج</option>
-                          </select>
-                        </div>
-                      :
-                       null
-                  }
-
+                  {role !== 'admin' && (
+                    <div>
+                      <label htmlFor="mini_role">نوع المستخدم</label>
+                      <select
+                        className="w-full rounded-lg border-gray-200 p-3 text-sm border"
+                        id="mini_role"
+                        value={mini_role}
+                        onChange={(e) => setmini_role(e.target.value)}
+                      >
+                        <option value="1">ا</option>
+                        <option value="2">ب</option>
+                        <option value="3">ج</option>
+                      </select>
+                    </div>
+                  )}
                   <div className="mt-4">
                     <button
                       type="submit"

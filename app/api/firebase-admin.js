@@ -1,6 +1,7 @@
+// firebase-admin.js
 import admin from "firebase-admin";
 
-const serviceAccount = require("path/to/serviceAccountKey.json");
+const serviceAccount = require("./service_account.json");
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -9,5 +10,4 @@ if (!admin.apps.length) {
   });
 }
 
-const adminAuth = admin.auth();
-export { adminAuth };
+export { admin }; 

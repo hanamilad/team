@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import { ref as databaseRef, set } from 'firebase/database';
-import { database, auth } from '../../firebase/Firebasepage';
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
+import {auth } from '../../firebase/Firebasepage';
+import {fetchSignInMethodsForEmail } from 'firebase/auth';
 import Breadcrumb from '../../Breadcrumb/page';
 import Loading from '../../loading';
 import Swal from 'sweetalert2';
@@ -41,7 +40,7 @@ const AddUser = () => {
         setLoading(false);
         return;
       }
-
+      
       // إرسال البيانات إلى الخادم (API)
       const response = await fetch("/api/addUser", {
         method: "POST",

@@ -31,12 +31,7 @@ const Users = () => {
     }, []);
 
     const handleUpdate = async (id) => {
-        const finalRole = role || users.find(user => user.id === id)?.role;  // if role is not provided, use the current role
-        const finalSemiRole = mini_role || users.find(user => user.id === id)?.semi_role; // same for semi_role
-        const finalname = newName || users.find(user => user.id === id)?.username; // same for semi_role
-        const finalusername = newEmail || users.find(user => user.id === id)?.email; // same for semi_role
-
-        if (!newName && !newEmail && !newPassword && !finalRole && !finalSemiRole) {
+        if (!newName && !newEmail && !newPassword) {
             Swal.fire({
                 text: "يرجى إدخال بيانات جديدة للتعديل",
                 icon: "error",
@@ -51,15 +46,14 @@ const Users = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     userId: id,
-                    newName: finalname,
-                    newEmail: finalusername,
+                    newName,
+                    newEmail,
                     newPassword: newPassword || undefined,
-                    newRole: finalRole,
-                    newSemiRole: finalSemiRole
                 }),
             });
 
             const textResponse = await response.text();
+            console.log("Response text:", textResponse);
             const result = JSON.parse(textResponse);
 
             if (response.ok) {
@@ -86,6 +80,7 @@ const Users = () => {
 
     };
 
+
     const handleDelete = async (id) => {
         const is_confirm = confirm("هل أنت متأكد أنك تريد حذف هذا المستخدم؟");
 
@@ -107,11 +102,13 @@ const Users = () => {
                         icon: "success",
                         confirmButtonText: "حسنًا",
                     });
+                    // تحديث الواجهة بعد حذف المستخدم
                     setUsers(users.filter(user => user.id !== id));
                 } else {
                     throw new Error(result.message);
                 }
             } catch (error) {
+                console.error("Error deleting user:", error);
                 Swal.fire({
                     text: error.message || "حدث خطأ أثناء حذف المستخدم",
                     icon: "error",
@@ -217,53 +214,32 @@ const Users = () => {
                                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                         {editingUser === user.id ? (
                                             <>
-                                                <div className="w-full rounded-lg border-gray-200 p-3 text-sm border">
+                                               <div className="w-full rounded-lg border-gray-200 p-3 text-sm border">
+                                                <select
+                                                 value={user.role} onChange={(e) => setRole(e.target.value)}>
+                                                    <option value="flower">زهرات</option>
+                                                    <option value="murshidats">مرشدات</option>
+                                                    <option value="Clan">عشيرة</option>
+                                                    <option value="admin">ادمن</option>
+                                                </select>
+                                                {role !== 'admin' && (
                                                     <select
-                                                        value={role || user.role} onChange={(e) => setRole(e.target.value)}>
-                                                        <option value="flower">زهرات</option>
-                                                        <option value="murshidats">مرشدات</option>
-                                                        <option value="Clan">عشيرة</option>
-                                                        <option value="admin">ادمن</option>
+                                                        id="mini_role"
+                                                        value={user.semi_role}
+                                                        onChange={(e) => setmini_role(e.target.value)}
+                                                    >
+                                                        <option value="1">ا</option>
+                                                        <option value="2">ب</option>
+                                                        <option value="3">ج</option>
                                                     </select>
-                                                    {role !== 'admin' && role !== 'Clan' && (
-                                                        <select
-                                                            value={mini_role || user.semi_role}
-                                                            onChange={(e) => setmini_role(e.target.value)}
-                                                        >
-                                                            <option value="1">ا</option>
-                                                            <option value="2">ب</option>
-                                                            <option value="3">ج</option>
-                                                        </select>
-                                                    )}
+                                                    
+                                                )}
                                                 </div>
                                             </>
                                         ) : (
-                                            <>
-                                                {user.role === 'flower'
-                                                    ? 'زهرات'
-                                                    : (user.role === 'murshidats'
-                                                        ? 'مرشدات'
-                                                        : (user.role === 'Clan'
-                                                            ? 'عشيرة'
-                                                            : (user.role === 'admin'
-                                                                ? 'ادمن'
-                                                                : ''))
-                                                    )}
-                                                {' '}
-                                                {user.role !== 'admin' && (user.semi_role
-                                                    === '1'
-                                                    ? '(ا)'
-                                                    : (user.semi_role
-                                                        === '2'
-                                                        ? '(ب)'
-                                                        : (user.semi_role
-                                                            === '3'
-                                                            ? '(ج)'
-                                                            : ''))
-                                                    )
-                                                }
-                                            </>
+                                            user.role
                                         )}
+
                                     </td>
                                     <td>
                                         <div className="flex justify-center">

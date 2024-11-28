@@ -1,7 +1,8 @@
 // firebase-admin.js
 import admin from "firebase-admin";
 
-const serviceAccount = require("./service_account.json");
+// الحصول على بيانات الاعتماد من المتغير البيئي
+const serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -10,4 +11,4 @@ if (!admin.apps.length) {
   });
 }
 
-export { admin }; 
+export { admin };

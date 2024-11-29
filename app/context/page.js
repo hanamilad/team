@@ -25,6 +25,7 @@ const UserProvider = ({ children }) => {
                 try {
                     const userSnap = await get(userRef);
                     console.log(userSnap, "User Snapshot"); // طباعة البيانات
+                    console.log(new Date().toISOString());
 
                     if (userSnap.exists()) {
                         console.log("User data found:", userSnap.val());

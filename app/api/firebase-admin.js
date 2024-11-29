@@ -11,4 +11,7 @@ if (!admin.apps.length) {
   });
 }
 
+console.log("Firebase Admin SDK initialized");
+
+
 export { admin };

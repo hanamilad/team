@@ -30,7 +30,7 @@ const Notifications = () => {
             for (const key in data) {
                 const person = data[key];
                 if (userRole == 'admin') {
-                    if (calculateAge(person.date) >= 12 && person.groub == '1' ) {
+                    if (calculateAge(person.date) >= 11 && person.groub == '1' ) {
                         filteredNotifications.push(
                             <Link 
                             key={key} 

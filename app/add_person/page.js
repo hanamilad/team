@@ -437,7 +437,7 @@ const AddPerson = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor='leader_name'>قائد الفرقة وقت الانضام </label>
+                      <label htmlFor='leader_name'>قائد الفرقة وقت الانضمام </label>
                       <input
                         className="w-full rounded-lg border-gray-200 p-3 text-sm border"
                         type="text"

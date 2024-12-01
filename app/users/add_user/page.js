@@ -135,7 +135,7 @@ const AddUser = () => {
                       <option value="admin">ادمن</option>
                     </select>
                   </div>
-                  {role !== 'admin' && (
+                  {role !== 'admin' && role !== 'Clan' && (
                     <div>
                       <label htmlFor="mini_role">نوع المستخدم</label>
                       <select

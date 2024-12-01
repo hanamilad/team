@@ -250,7 +250,7 @@ const Users = () => {
                                                                 : ''))
                                                     )}
                                                 {' '}
-                                                {user.role !== 'admin' && (user.semi_role
+                                                {user.role !== 'admin' && user.role !== 'Clan' && (user.semi_role
                                                     === '1'
                                                     ? '(ا)'
                                                     : (user.semi_role

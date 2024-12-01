@@ -1,55 +1,42 @@
-  "use client"
-  import React, { useState } from 'react';
-  import { useRouter } from 'next/navigation';
-  import { auth, database } from '../firebase/Firebasepage';
-  import { signInWithEmailAndPassword } from 'firebase/auth';
-  import { ref, get } from 'firebase/database'; 
+"use client"
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { auth, database } from '../firebase/Firebasepage';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ref, get } from 'firebase/database';
 
-  const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const router = useRouter();
+const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-    // const handleLogin = async (e) => {
-    //   e.preventDefault();
-    //   setError('');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
 
-    //   try {
-    //     await signInWithEmailAndPassword(auth, email, password);
-    //     router.push('/');
-    //     setError(" ")
-    //   } catch (err) {
-    //   }
-    // };
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid;
 
+      // التحقق من وجود userId في جدول users
+      const userRef = ref(database, `users/${userId}`);
+      const snapshot = await get(userRef);
 
-    const handleLogin = async (e) => {
-      e.preventDefault();
-      setError('');
-  
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const userId = userCredential.user.uid;
-  
-        // التحقق من وجود userId في جدول users
-        const userRef = ref(database, `users/${userId}`);
-        const snapshot = await get(userRef);
-  
-        if (snapshot.exists()) {
-          // المستخدم موجود في جدول users
-          router.push('/');
-        } else {
-          // المستخدم غير موجود
-          setError('هذا الحساب غير مسجل في النظام.');
-          // تسجيل خروج المستخدم تلقائيًا
-          auth.signOut();
-        }
-      } catch (err) {
-        setError('خطأ في تسجيل الدخول. الرجاء التحقق من البيانات.');
+      if (snapshot.exists()) {
+        // المستخدم موجود في جدول users
+        router.push('/');
+      } else {
+        // المستخدم غير موجود
+        setError('هذا الحساب غير مسجل في النظام.');
+        // تسجيل خروج المستخدم تلقائيًا
+        auth.signOut();
       }
-    };
-  
+    } catch (err) {
+      setError('خطأ في تسجيل الدخول. الرجاء التحقق من البيانات.');
+    }
+  };
+
   return (
     <section className="bg-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -134,6 +121,15 @@
                 </div>
               )}
             </form>
+            <div className="mt-6">
+              <button
+                className="text-blue-600 underline hover:text-blue-800"
+                onClick={() => router.push('/forgot-password')}
+              >
+                هل نسيت كلمة السر؟
+              </button>
+            </div>
+
           </div>
         </main>
       </div>
